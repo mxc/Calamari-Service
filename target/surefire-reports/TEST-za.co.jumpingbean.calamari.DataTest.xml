@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="8.123" errors="2" skipped="0" tests="7" name="za.co.jumpingbean.calamari.DataTest">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/amd64"/>
+    <property name="java.vm.version" value="14.1-b02"/>
+    <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
+    <property name="java.vendor.url" value="http://java.sun.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="ZA"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/mark/workspace/Calamari"/>
+    <property name="java.runtime.version" value="1.6.0_15-b03"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="basedir" value="/home/mark/workspace/Calamari"/>
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="surefire.real.class.path" value="/tmp/surefirebooter1520560784039312396.jar"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="os.name" value="Linux"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/amd64/server:/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/amd64:/usr/lib/jvm/java-6-sun-1.6.0.15/jre/../lib/amd64:/usr/java/packages/lib/amd64:/lib:/usr/lib"/>
+    <property name="surefire.test.class.path" value="/home/mark/workspace/Calamari/target/test-classes:/home/mark/workspace/Calamari/target/classes:/home/mark/.m2/repository/junit/junit/4.8.1/junit-4.8.1.jar:/home/mark/.m2/repository/org/apache/derby/derbyLocale_cs/10.5.3.0_1/derbyLocale_cs-10.5.3.0_1.jar:/home/mark/.m2/repository/org/apache/derby/derby/10.5.3.0_1/derby-10.5.3.0_1.jar:/home/mark/.m2/repository/org/slf4j/slf4j-log4j12/1.4.2/slf4j-log4j12-1.4.2.jar:/home/mark/.m2/repository/org/slf4j/slf4j-api/1.4.2/slf4j-api-1.4.2.jar:/home/mark/.m2/repository/log4j/log4j/1.2.13/log4j-1.2.13.jar:/home/mark/.m2/repository/joda-time/joda-time/1.6/joda-time-1.6.jar:/home/mark/.m2/repository/com/sun/xml/bind/jaxb-impl/2.2/jaxb-impl-2.2.jar:/home/mark/.m2/repository/javax/xml/bind/jaxb-api/2.2/jaxb-api-2.2.jar:/home/mark/.m2/repository/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar:/home/mark/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar:/home/mark/.m2/repository/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1.jar:/home/mark/.m2/repository/com/sun/jersey/jersey-core/1.1.5.1/jersey-core-1.1.5.1.jar:/home/mark/.m2/repository/com/sun/jersey/jersey-server/1.1.5.1/jersey-server-1.1.5.1.jar:/home/mark/.m2/repository/asm/asm/3.1/asm-3.1.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-servlet-webserver/1.9.8/grizzly-servlet-webserver-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-http/1.9.8/grizzly-http-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-framework/1.9.8/grizzly-framework-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-utils/1.9.8/grizzly-utils-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-rcm/1.9.8/grizzly-rcm-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-portunif/1.9.8/grizzly-portunif-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-http-servlet/1.9.8/grizzly-http-servlet-1.9.8.jar:/home/mark/.m2/repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar:/home/mark/.m2/repository/com/sun/jersey/jersey-client/1.1.5.1/jersey-client-1.1.5.1.jar:"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="50.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Server Compiler"/>
+    <property name="os.version" value="2.6.31-20-generic"/>
+    <property name="user.home" value="/home/mark"/>
+    <property name="user.timezone" value="Africa/Johannesburg"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="1.6"/>
+    <property name="user.name" value="mark"/>
+    <property name="java.class.path" value="/home/mark/workspace/Calamari/target/test-classes:/home/mark/workspace/Calamari/target/classes:/home/mark/.m2/repository/junit/junit/4.8.1/junit-4.8.1.jar:/home/mark/.m2/repository/org/apache/derby/derbyLocale_cs/10.5.3.0_1/derbyLocale_cs-10.5.3.0_1.jar:/home/mark/.m2/repository/org/apache/derby/derby/10.5.3.0_1/derby-10.5.3.0_1.jar:/home/mark/.m2/repository/org/slf4j/slf4j-log4j12/1.4.2/slf4j-log4j12-1.4.2.jar:/home/mark/.m2/repository/org/slf4j/slf4j-api/1.4.2/slf4j-api-1.4.2.jar:/home/mark/.m2/repository/log4j/log4j/1.2.13/log4j-1.2.13.jar:/home/mark/.m2/repository/joda-time/joda-time/1.6/joda-time-1.6.jar:/home/mark/.m2/repository/com/sun/xml/bind/jaxb-impl/2.2/jaxb-impl-2.2.jar:/home/mark/.m2/repository/javax/xml/bind/jaxb-api/2.2/jaxb-api-2.2.jar:/home/mark/.m2/repository/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar:/home/mark/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar:/home/mark/.m2/repository/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1.jar:/home/mark/.m2/repository/com/sun/jersey/jersey-core/1.1.5.1/jersey-core-1.1.5.1.jar:/home/mark/.m2/repository/com/sun/jersey/jersey-server/1.1.5.1/jersey-server-1.1.5.1.jar:/home/mark/.m2/repository/asm/asm/3.1/asm-3.1.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-servlet-webserver/1.9.8/grizzly-servlet-webserver-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-http/1.9.8/grizzly-http-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-framework/1.9.8/grizzly-framework-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-utils/1.9.8/grizzly-utils-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-rcm/1.9.8/grizzly-rcm-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-portunif/1.9.8/grizzly-portunif-1.9.8.jar:/home/mark/.m2/repository/com/sun/grizzly/grizzly-http-servlet/1.9.8/grizzly-http-servlet-1.9.8.jar:/home/mark/.m2/repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar:/home/mark/.m2/repository/com/sun/jersey/jersey-client/1.1.5.1/jersey-client-1.1.5.1.jar:"/>
+    <property name="java.vm.specification.version" value="1.0"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/usr/lib/jvm/java-6-sun-1.6.0.15/jre"/>
+    <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.language" value="en"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.6.0_15"/>
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/resources.jar:/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/rt.jar:/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/jsse.jar:/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/jce.jar:/usr/lib/jvm/java-6-sun-1.6.0.15/jre/lib/charsets.jar:/usr/lib/jvm/java-6-sun-1.6.0.15/jre/classes"/>
+    <property name="java.vendor" value="Sun Microsystems Inc."/>
+    <property name="localRepository" value="/home/mark/.m2/repository"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="gnome"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase time="3.335" classname="za.co.jumpingbean.calamari.DataTest" name="getTopSitesByRequest"/>
+  <testcase time="1.135" classname="za.co.jumpingbean.calamari.DataTest" name="getTopSitesBySize"/>
+  <testcase time="0.702" classname="za.co.jumpingbean.calamari.DataTest" name="getTopUsersBySize"/>
+  <testcase time="0.291" classname="za.co.jumpingbean.calamari.DataTest" name="getTopUsersByHits"/>
+  <testcase time="0.334" classname="za.co.jumpingbean.calamari.DataTest" name="getUserDetails">
+    <error message="GET http://127.0.0.1:9998/dataservice/userdetails/20100331/20100331/joseph returned a response status of 500" type="com.sun.jersey.api.client.UniformInterfaceException">com.sun.jersey.api.client.UniformInterfaceException: GET http://127.0.0.1:9998/dataservice/userdetails/20100331/20100331/joseph returned a response status of 500
+	at com.sun.jersey.api.client.WebResource.handle(WebResource.java:574)
+	at com.sun.jersey.api.client.WebResource.access$400(WebResource.java:69)
+	at com.sun.jersey.api.client.WebResource$Builder.get(WebResource.java:455)
+	at za.co.jumpingbean.calamari.DataTest.getUserDetails(DataTest.java:102)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:76)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:236)
+	at org.apache.maven.surefire.junit4.JUnit4TestSet.execute(JUnit4TestSet.java:62)
+	at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.executeTestSet(AbstractDirectoryTestSuite.java:140)
+	at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.execute(AbstractDirectoryTestSuite.java:127)
+	at org.apache.maven.surefire.Surefire.run(Surefire.java:177)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess(SurefireBooter.java:345)
+	at org.apache.maven.surefire.booter.SurefireBooter.main(SurefireBooter.java:1009)
+</error>
+  </testcase>
+  <testcase time="0.326" classname="za.co.jumpingbean.calamari.DataTest" name="getDomainDetails">
+    <error message="GET http://127.0.0.1:9998/dataservice/domaindetails/20100331/20100331/google.com returned a response status of 500" type="com.sun.jersey.api.client.UniformInterfaceException">com.sun.jersey.api.client.UniformInterfaceException: GET http://127.0.0.1:9998/dataservice/domaindetails/20100331/20100331/google.com returned a response status of 500
+	at com.sun.jersey.api.client.WebResource.handle(WebResource.java:574)
+	at com.sun.jersey.api.client.WebResource.access$400(WebResource.java:69)
+	at com.sun.jersey.api.client.WebResource$Builder.get(WebResource.java:455)
+	at za.co.jumpingbean.calamari.DataTest.getDomainDetails(DataTest.java:120)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:76)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:236)
+	at org.apache.maven.surefire.junit4.JUnit4TestSet.execute(JUnit4TestSet.java:62)
+	at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.executeTestSet(AbstractDirectoryTestSuite.java:140)
+	at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.execute(AbstractDirectoryTestSuite.java:127)
+	at org.apache.maven.surefire.Surefire.run(Surefire.java:177)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess(SurefireBooter.java:345)
+	at org.apache.maven.surefire.booter.SurefireBooter.main(SurefireBooter.java:1009)
+</error>
+  </testcase>
+  <testcase time="0.199" classname="za.co.jumpingbean.calamari.DataTest" name="getContentTypeData"/>
+</testsuite>
