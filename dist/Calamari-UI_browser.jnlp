@@ -11,8 +11,10 @@
         <j2se version="1.5+"/>
         <extension name="JavaFX Runtime" href="http://dl.javafx.com/1.2/javafx-rt.jnlp"/>
         <jar href="Calamari-UI.jar" main="true"/>
-        <jar href="lib/jfxtras-controls.jar"/>
         <jar href="lib/jfxtras-common.jar"/>
+        <jar href="lib/jfxtras-controls.jar"/>
+        <jar href="lib/miglayout-3.7.jar"/>
+        <jar href="lib/swing-worker-1.2.jar"/>
     </resources>
     <applet-desc name="Calamari-UI" main-class="com.sun.javafx.runtime.adapter.Applet" width="200" height="200">
         <param name="MainJavaFXScript" value="za.co.jumpingbean.calamariui.Main"/>

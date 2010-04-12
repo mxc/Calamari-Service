@@ -15,4 +15,11 @@ import javafx.scene.chart.PieChart;
 
 public class ListWrapper {
         public var list:PieChart.Data[];
+        public var done:Boolean=false;
+
+        public function reset(){
+            done=false;
+            list=[];
+        }
+
 }

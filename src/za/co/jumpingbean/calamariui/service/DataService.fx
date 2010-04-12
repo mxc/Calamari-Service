@@ -18,10 +18,10 @@ public class DataService {
        def baseUrl="http://127.0.0.1:9998";
 
         public function getTopSitesByHits(startDate:GregorianCalendar,endDate:GregorianCalendar,count:Integer,data:ListWrapper){
-             getChartData(startDate,endDate,count,data,"dataservice/topsitesbyhits");
+             getChartData(startDate,endDate,count,data,"dataservice/topsitesbyhits","hits");
         }
 
-        function getChartData(startDate:GregorianCalendar,endDate:GregorianCalendar,count:Integer,data:ListWrapper,url:String){
+        function getChartData(startDate:GregorianCalendar,endDate:GregorianCalendar,count:Integer,data:ListWrapper,url:String,type:String){
             def begin = Utils.formatDate(startDate);
             def end = Utils.formatDate(endDate);
             def parser = ChartDataPointParser{};
@@ -30,27 +30,37 @@ public class DataService {
                 location: "{baseUrl}/{url}/{begin}/{end}/{count}";
                 parser: parser;
                 onDone: function(){
+                   if (sizeof parser.list>0){
                     for (point in parser.list){
                         var tmpData =PieChart.Data{
                             label:point.name.replace("http://","");
-                            value:point.hits/1024;
                         }
+                        if(type=="hits") {
+                             tmpData.value=point.hits;
+                           }else{
+                             tmpData.value=point.bytes/1024/1024;
+                        }
+                        tmpData.action=function(){ tmpData.explodeFactor=2 }
                         insert tmpData into data.list;
                     }
+                    data.done=true;
+                  }else{
+                    data.done=false;
+                  }
                 }
             }
             request.start();
         }
 
         public function getTopSitesBySize(startDate:GregorianCalendar,endDate:GregorianCalendar,count:Integer,data:ListWrapper){
-             getChartData(startDate,endDate,count,data,"dataservice/topsitesbysize");
+             getChartData(startDate,endDate,count,data,"dataservice/topsitesbysize","bytes");
         }
 
         public function getTopUsersBySize(startDate:GregorianCalendar,endDate:GregorianCalendar,count:Integer,data:ListWrapper){
-             getChartData(startDate,endDate,count,data,"dataservice/topusersbysize");
+             getChartData(startDate,endDate,count,data,"dataservice/topusersbysize","bytes");
         }
 
         public function getTopUsersByHits(startDate:GregorianCalendar,endDate:GregorianCalendar,count:Integer,data:ListWrapper){
-             getChartData(startDate,endDate,count,data,"dataservice/topusersbyhits");
+             getChartData(startDate,endDate,count,data,"dataservice/topusersbyhits","hits");
         }
 }

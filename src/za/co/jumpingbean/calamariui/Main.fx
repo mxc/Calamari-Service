@@ -17,9 +17,15 @@ import javafx.scene.paint.Stop;
 import javafx.scene.paint.Color;
 import javafx.scene.chart.part.Side;
 import za.co.jumpingbean.calamariui.service.Utils;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
+import javafx.geometry.VPos;
+import javafx.scene.chart.PieChart3D;
+import javafx.geometry.HPos;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.scene.control.ProgressIndicator;
 
 /**
  * @author mark
@@ -30,12 +36,42 @@ var startDate:GregorianCalendar= new GregorianCalendar(2010,2,31);
 var endDate:GregorianCalendar= new GregorianCalendar(2010,2,31);
 var count:Integer=10;
 
-//var list:PieChart.Data[];
 var topSitesHits = ListWrapper{};
 var topSitesBytes = ListWrapper{};
 var topUsersHits = ListWrapper{};
 var topUsersBytes=ListWrapper{};
+var scale=0.9;
 
+//Determines when we can stop the poller timeline object.
+var pollerDone=false on replace oldvalue{
+            if (pollerDone==true){
+                poller.stop();
+                println("stoping poller...");
+            }
+     };
+
+//This code will poll the web service every 10s until a result is received
+//To start the poller again the pollerDone variable must be set to false
+// and the poller play() function called.
+
+def poller = Timeline{
+    repeatCount: Timeline.INDEFINITE
+    keyFrames: [
+      KeyFrame{
+                time: 5s
+                action: function(){
+                   println("polling ....");
+                   if (not topSitesHits.done) service.getTopSitesByHits(startDate, endDate, count, topSitesHits);
+                   if (not topSitesBytes.done) service.getTopSitesBySize(startDate, endDate, count, topSitesBytes);
+                   if (not topUsersBytes.done) service.getTopUsersBySize(startDate, endDate, count, topUsersBytes);
+                   if (not topUsersHits.done) service.getTopUsersByHits(startDate, endDate, count, topUsersHits);
+                   if (not (topSitesHits.done and topSitesBytes.done and topUsersBytes.done and topUsersHits.done)) pollerDone = true;
+                }
+              }
+    ]
+}
+
+def progressIndicator = ProgressIndicator{progress: -1}
 
 def gradientFill:LinearGradient =  LinearGradient {
             startX: 0
@@ -55,7 +91,19 @@ def gradientFill:LinearGradient =  LinearGradient {
                     ]
  }
 
-//var scale=1;
+public function startPoller(){
+                pollerDone=false;
+                topSitesBytes.reset();
+                topSitesHits.reset();
+                topUsersBytes.reset();
+                topUsersHits.reset();
+                poller.play();
+}
+
+
+function run(){
+poller.play();
+var chartArea:HBox;
 
 Stage {
     title: "Calamari - Yummy Squid"
@@ -64,37 +112,46 @@ Stage {
         height: 1000
         content: [
          VBox{
-             content:[
-                      HBox{
+                vpos:VPos.TOP
+                hpos:HPos.CENTER
+                content:[
+                    CriteriaControls{
+                        startDate:startDate
+                        endDate:endDate
+                    }
+                    chartArea = HBox{
+                          hpos:HPos.LEFT
                           content:[
-                           PieChart{
+                           progressIndicator,
+                           PieChart3D{
                                     data: bind topSitesHits.list;
-                                    //width:800;
-                                    //height:800;
                                     title:"Top Sites By Hits from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)}";
                                     //chartBackgoundFill:gradientFill;
                                     pieLabelFill:Color.BLACK;
                                     legendVisible:true;
-                                    legendSide:Side.BOTTOM
-                                    //scaleX: bind scale
-                                    //scaleY:bind scale
+                                    pieLabelVisible:false;
+                                    //legendSide:Side.BOTTOM
+                                    scaleX: bind scale
+                                    scaleY:bind scale
                                     //onMouseClicked:function(event:MouseEvent){scale=2; event.source.scaleY=2;}
                                 },
-                           PieChart{
+                           PieChart3D{
                                     data: bind topSitesBytes.list;
                                     title:"Top Sites By MBytes from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)}";
                                     pieLabelFill:Color.BLACK;
+                                    pieLabelVisible:false;
                                     legendVisible:true;
-                                    legendSide:Side.BOTTOM
-                                    //scaleX: bind scale
-                                    //scaleY:bind scale
+                                    //legendSide:Side.BOTTOM
+                                    scaleX: bind scale
+                                    scaleY:bind scale
                                    //onMouseClicked:function(event:MouseEvent){scale=2; event.source.scaleY=2;}
                                }
                            ]
                            },
                       HBox{
+                           hpos:HPos.LEFT
                            content:[
-                                PieChart{
+                                PieChart3D{
                                     data: bind topUsersHits.list;
                                     //width:800;
                                     //height:800;
@@ -102,19 +159,21 @@ Stage {
                                     //chartBackgoundFill:gradientFill;
                                     pieLabelFill:Color.BLACK;
                                     legendVisible:true;
-                                    legendSide:Side.BOTTOM
-                                   // scaleX: bind scale
-                                   // scaleY:bind scale
+                                    pieLabelVisible:false;
+                                    //legendSide:Side.BOTTOM
+                                    scaleX: bind scale
+                                    scaleY:bind scale
                                     //onMouseClicked:function(event:MouseEvent){scale=2; event.source.scaleY=2;}
                                 },
-                               PieChart{
+                               PieChart3D{
                                     data: bind topUsersBytes.list;
                                     title:"Top Users By MBytes from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)}";
                                     pieLabelFill:Color.BLACK;
                                     legendVisible:true;
-                                    legendSide:Side.BOTTOM
-                                   // scaleX: bind scale
-                                   // scaleY:bind scale
+                                    pieLabelVisible:false;
+                                    //legendSide:Side.BOTTOM
+                                    scaleX: bind scale
+                                    scaleY:bind scale
                                    //onMouseClicked:function(event:MouseEvent){scale=2; event.source.scaleY=2;}
                                }
                            ]
@@ -124,18 +183,9 @@ Stage {
             ]
          }
     }
+}
 
 
-//getData()
-
-//function getData(startDate:GregorianCalendar,endDate:GregorianCalendar,count:Integer){
-    service.getTopSitesByHits(startDate, endDate, count, topSitesHits);
-    service.getTopSitesBySize(startDate, endDate, count, topSitesBytes);
-    service.getTopUsersBySize(startDate, endDate, count, topUsersBytes);
-    service.getTopUsersByHits(startDate, endDate, count, topSitesHits);
-
-
-//}
 
 
 
