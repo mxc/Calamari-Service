@@ -22,6 +22,7 @@ import za.co.jumpingbean.calamariui.model.SquidLogRecord;
 import javafx.scene.layout.Flow;
 import za.co.jumpingbean.calamariui.common.ExpandImage;
 import javafx.geometry.VPos;
+import za.co.jumpingbean.calamariui.common.DataLoadingIndicator;
 
 
 /**
@@ -52,6 +53,7 @@ public class AggregateControl extends CustomNode {
         var btnGetData:Button = Button{
             text:"Get Summary"
             onMouseClicked:function (event:MouseEvent){
+                    this.tableDisplay.startIndicator(DataLoadingIndicator.AGGREGATING);
                     //Get selected aggregate columns.
                     def agg= Aggregator{};
                     for (tmpCheckbox in list){
@@ -76,6 +78,7 @@ public class AggregateControl extends CustomNode {
                         tableDisplay.hideColumns=["elapsed","parameters","serverInfo","peerStatusPeerHost","method","codeStatus","hits","accessDate","bytesKB"];
                         tableDisplay.tableData=tableDisplay.logEntries.list;
                     }
+                    tableDisplay.stopIndicator();
                 }
         }
         

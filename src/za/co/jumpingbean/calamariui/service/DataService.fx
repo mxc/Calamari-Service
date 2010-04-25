@@ -71,7 +71,8 @@ public class DataService {
                     data.error=false;
                   }else{
                     data.done=true;
-                    data.error=false;
+                    data.error=true;
+                    data.errorMessage="0 records returned"
                   }
                 }
             }
@@ -130,7 +131,8 @@ public class DataService {
                     data.error=false;
                   }else{
                     data.done=true;
-                    data.error=false;
+                    data.error=true;
+                    data.errorMessage="0 records returned"
                   }
                 }
             }
