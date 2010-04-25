@@ -71,7 +71,7 @@ var pollerDone=false on replace oldvalue{
                 dataLoadingIndicator.stop();
                 delete dataLoadingIndicator from displaySelectorPlacement.content;
                 println("stoping poller...");
-                //pie1.title="Top Sites By Hits from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)}";
+                pie1.title="Top Sites By Hits from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)}";
                 pie2.title="Top Users By Hits from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)}";
                 pie3.title="Top Sites By MBytes from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)}";
                 pie4.title="Top Users By MBytes from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)}";
