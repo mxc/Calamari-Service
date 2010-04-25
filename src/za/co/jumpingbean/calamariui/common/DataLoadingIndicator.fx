@@ -22,6 +22,7 @@ import javafx.animation.Interpolator;
 
     public def LOADING:String="LOADING DATA ....";
     public def SORTING:String="SORTING DATA ....";
+    public def AGGREGATING:String="AGGREGATING DATA ....";
 
 public class DataLoadingIndicator extends CustomNode{
 

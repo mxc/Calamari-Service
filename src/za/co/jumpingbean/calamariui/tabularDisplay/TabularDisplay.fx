@@ -269,7 +269,7 @@ override public function startPoller(){
                 tabularPoller.play();
 }
 
-function startIndicator(text:String){
+public function startIndicator(text:String){
          reportTitle="{StringUtil.camelToTitleCase(reportType)} from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)} for parameter {reportParameter}";
          dataLoadingIndicator.text=text;
          dataLoadingIndicator.start();
@@ -277,7 +277,7 @@ function startIndicator(text:String){
 }
 
 
-    function stopIndicator(){
+public  function stopIndicator(){
             dataLoadingIndicator.stop();
             delete dataLoadingIndicator from vbox.content;
     }
@@ -290,7 +290,6 @@ class  columnSorter extends MouseAdapter{
     var display:TabularDisplay;
 
     override public function mouseClicked(event:MouseEvent):Void {
-
          display.startIndicator(DataLoadingIndicator.SORTING);
          
          def colModel:TableColumnModel = table.getJTable().getColumnModel();
