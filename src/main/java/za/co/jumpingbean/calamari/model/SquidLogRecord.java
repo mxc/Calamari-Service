@@ -29,6 +29,7 @@ public class SquidLogRecord {
         private String peerStatusPeerHost;
         private String contentType;
         private String domain;
+        private String checksum;
 
     /**
      * @return the serverInfo
@@ -197,6 +198,20 @@ public class SquidLogRecord {
      */
     public void setDomain(String domain) {
         this.domain = domain;
+    }
+
+    /**
+     * @return the checksum
+     */
+    public String getChecksum() {
+        return checksum;
+    }
+
+    /**
+     * @param checksum the checksum to set
+     */
+    public void setChecksum(String checksum) {
+        this.checksum = checksum;
     }
 
 }

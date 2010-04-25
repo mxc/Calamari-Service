@@ -13,6 +13,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +51,7 @@ public class AdminService {
         private final JDBCHelper helper = JDBCHelper.getJDBCHelper();
         private final Logger logger = LoggerFactory.getLogger(AdminService.class);
         private static final Status importStatus = new Status();
+        private Thread importThread=null;
 
 
         @GET
@@ -100,13 +102,19 @@ public class AdminService {
                                     + "varchar(255), codeStatus varchar(255), "
                                     + "bytes int, method varchar(255), domain  varchar(355), "
                                     + "parameters long varchar, rfc931 varchar(255), "
-                                    + "peerstatusPeerhost varchar(255),contentType varchar(255))");
+                                    + "peerstatusPeerhost varchar(255),contentType varchar(255),"
+                                    + "checksum varchar(255))"
+                                    );
                             //logger.debug("number of tables created " + updated);
                             helper.executeUpdate("create index webdomain on squidlog (domain)");
+                            helper.executeUpdate("create index checksumIdx on squidlog (checksum)");
                             helper.executeUpdate("create index proxyUserDate on squidlog (rfc931,accessDate)");
                             helper.executeUpdate("create table config (id integer primary key generated always as identity,"
                                                 +"configkey varchar(255)," +
                                                 "configvalue varchar(255))");
+                            helper.executeUpdate("create table importFile (id integer primary key generated always as identity,"
+                                                +"fileName varchar(255)," +
+                                                "importDate timestamp, checksum bigint)");
                             buf.append(" new database initialised.");
                         }else {
                             buf.append(" existing database found, taking no action.");
@@ -197,22 +205,26 @@ public class AdminService {
                     logger.warn("log folder variable not configured");
                     throw new ServiceException("Log folder variable has not been set. Please configure.",null);
                 }
-                //Limit the files to ones that contain the workd access.
+                //Limit the files to ones that contain the word access.
                 //We are interested in the squid access.log files.
-                if (AdminService.importStatus.isImporting()){
+                synchronized(AdminService.importStatus){
+                    if (AdminService.importStatus.isImporting()){
                     return "import is currently in progress. please wait before starting another.";
+                }
                 }
                 File logFolder = new File(folder);
                 final File list[];
                 if (logFolder.isDirectory() && (list = logFolder.listFiles(new FileFilter(){
                 @Override
                 public boolean accept(File pathname) {
-                    logger.debug("info = "+ pathname.getName());
-                    if (pathname.getName().equalsIgnoreCase("access.log")) return true;
+                    if (pathname.getName().indexOf("access.log")!=-1) {
+                        logger.debug("file "+pathname.getName()+" accepted for processing...");
+                        return true;
+                    }
                     else return false;
                 }
                 })).length>0){
-                      new Runnable(){
+                    importThread=(new Thread(){
                     @Override
                     public void run() {
                         synchronized(AdminService.importStatus){
@@ -220,7 +232,9 @@ public class AdminService {
                         }
                         for (File file : list){
                             try {
-                                synchronized(AdminService.importStatus){AdminService.importStatus.setCurrentFile(file.getName());};
+                                synchronized(AdminService.importStatus){
+                                    AdminService.importStatus.setCurrentFile(file.getName());
+                                };
                                importer.importLog(file);
                             } catch (ServiceException ex) {
                                 logger.error("Could not import file "+ file.getAbsolutePath());
@@ -231,7 +245,8 @@ public class AdminService {
                             AdminService.importStatus.setCurrentFile("");
                       }
                     }
-                   }.run();
+                   });
+                   importThread.start();
                 }else{
                     logger.warn("there are no access.log files to import in folder " +folder);
                     throw new ServiceException("there are no access.log files to import in folder " +folder,null);

@@ -16,7 +16,7 @@
           <string>WEB-INF/classes/za/co/jumpingbean/calamari/services/SquidAccessLogImporter.class</string>
           <string>WEB-INF/classes/za/co/jumpingbean/calamari/services/AdminService$3.class</string>
           <string>WEB-INF/classes/za/co/jumpingbean/calamari/model/ChartDataPoint.class</string>
-          <string>WEB-INF/classes/za/co/jumpingbean/calamari/model/RecordDetail.class</string>
+          <string>WEB-INF/classes/za/co/jumpingbean/calamari/model/SquidLogRecord.class</string>
           <string>WEB-INF/classes/za/co/jumpingbean/calamari/support/LogFileWatcher.class</string>
           <string>WEB-INF/classes/za/co/jumpingbean/calamari/support/LogFileListener.class</string>
           <string>WEB-INF/classes/za/co/jumpingbean/calamari/support/WebServiceException.class</string>

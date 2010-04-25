@@ -84,7 +84,7 @@ public class DatabaseInitTest extends AbstractUnitTest
         resource = client.resource("http://127.0.0.1:9998/admin/importlogfiles");
         response = resource.accept(MediaType.TEXT_PLAIN).get(String.class);
         logger.debug("response="+response);
-        if (!response.contains("importing log files....")) {
+        if (response.indexOf("importing log files....")==-1) {
             Assert.assertFalse("log file import not started ",true);
             return;
         }
@@ -93,10 +93,12 @@ public class DatabaseInitTest extends AbstractUnitTest
         while(wait){
         resource = client.resource("http://127.0.0.1:9998/admin/importlogfilesstatus");
         response = resource.accept(MediaType.TEXT_PLAIN).get(String.class);
-        if (!response.contains("no import in progress")){
+        logger.debug(response);
+        if (response.indexOf("no import in progress")==-1){
             logger.info(response);
             try {
                 Thread.sleep(5000);
+                logger.debug("thread still importing - sleep...");
             } catch (InterruptedException ex) {
 
             }
