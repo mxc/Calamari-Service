@@ -9,6 +9,7 @@ package za.co.jumpingbean.calamariui.service;
 import java.io.InputStream;
 import javafx.data.pull.PullParser;
 import javafx.data.pull.Event;
+import java.lang.Exception;
 
 /**
  * @author mark
@@ -17,6 +18,7 @@ import javafx.data.pull.Event;
 public abstract class AbstractParser {
     
     public abstract function onEvent(event:Event):Void;
+
 
     public function parse(input:InputStream){
         var parser =PullParser {

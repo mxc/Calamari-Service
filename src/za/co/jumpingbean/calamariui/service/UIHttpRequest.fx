@@ -7,6 +7,7 @@
 package za.co.jumpingbean.calamariui.service;
 
 import javafx.io.http.HttpRequest;
+import java.lang.Exception;
 
 /**
  * @author mark
@@ -17,21 +18,21 @@ public class UIHttpRequest {
     public var location:String;
     public var parser:AbstractParser;
     public var onDone: function():Void = null;
+    public var onException:function(ex:Exception):Void=null;
+    public def request:HttpRequest = HttpRequest{};
 
     public function start(){
-            def request:HttpRequest = HttpRequest{
-                    location:location;
-                    onDone:onDone;
-                    onInput: function(is: java.io.InputStream) {
-                     try {
-                            parser.parse(is);
-                         } finally {
-                            is.close();
-                        }
+            request.location=location;
+            request.onDone=onDone;
+            request.onException=onException;
+            request.onInput= function(is: java.io.InputStream) {
+                 try {
+                        parser.parse(is);
+                     } finally {
+                        is.close();
                     }
-                    method: HttpRequest.GET
-                }
+             }
+             request.method=HttpRequest.GET;
             request.start();
         }
-
 }
