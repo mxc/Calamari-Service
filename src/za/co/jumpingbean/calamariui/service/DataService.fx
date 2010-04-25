@@ -28,7 +28,7 @@ public class DataService {
 
        var main:Main;
 
-       def baseUrl="http://192.168.1.216:9998";
+       def baseUrl="http://192.168.1.229:9998";
 
         public function getTopSitesByHits(startDate:GregorianCalendar,endDate:GregorianCalendar,count:Integer,data:ChartDataListWrapper){
              getChartData(startDate,endDate,count,data,"dataservice/topsitesbyhits","hits");
@@ -71,7 +71,8 @@ public class DataService {
                     data.error=false;
                   }else{
                     data.done=true;
-                    data.error=false;
+                    data.error=true;
+                    data.errorMessage="0 records returned"
                   }
                 }
             }
@@ -130,7 +131,8 @@ public class DataService {
                     data.error=false;
                   }else{
                     data.done=true;
-                    data.error=false;
+                    data.error=true;
+                    data.errorMessage="0 records returned"
                   }
                 }
             }
