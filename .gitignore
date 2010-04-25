@@ -1,0 +1,5 @@
+#exclude the database
+Calamari/
+#exclude target
+target/
+
