@@ -19,7 +19,7 @@ public class Main {
 
         public static void main(String[] args) throws IOException {
 
-            final String baseUri = "http://localhost:9998/";
+            final String baseUri = "http://192.168.1.229:9998/";
             final Map<String, String> initParams =
    	                       new HashMap<String, String>();
 
@@ -27,8 +27,10 @@ public class Main {
                    "za.co.jumpingbean.calamari.services");
 
           System.out.println("Starting grizzly...");
-          SelectorThread threadSelector =
-  	          GrizzlyWebContainerFactory.create(baseUri, initParams);
+          SelectorThread threadSelector = GrizzlyWebContainerFactory.create(baseUri, initParams);
+          threadSelector.setCompression("on");
+          threadSelector.setCompressableMimeTypes("application/fastinfoset");
+          threadSelector.setCompressionMinSize(0);
           System.out.println(String.format(
             "Jersey app started with WADL available at %sapplication.wadl\n" +
             "Try out %shelloworld\nHit enter to stop it...", baseUri, baseUri));
