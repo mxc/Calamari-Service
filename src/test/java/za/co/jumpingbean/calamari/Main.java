@@ -30,7 +30,8 @@ public class Main {
           SelectorThread threadSelector = GrizzlyWebContainerFactory.create(baseUri, initParams);
           threadSelector.setCompression("on");
           threadSelector.setCompressableMimeTypes("application/fastinfoset");
-          threadSelector.setCompressionMinSize(0);
+          threadSelector.setCompressionMinSize(5);
+          threadSelector.setCompressableMimeTypes("text/xml");
           System.out.println(String.format(
             "Jersey app started with WADL available at %sapplication.wadl\n" +
             "Try out %shelloworld\nHit enter to stop it...", baseUri, baseUri));
