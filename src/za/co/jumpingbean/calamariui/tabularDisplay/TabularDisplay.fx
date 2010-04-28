@@ -48,6 +48,7 @@ import org.jfxtras.util.StringUtil;
 import za.co.jumpingbean.calamariui.common.DisplaySelector;
 import za.co.jumpingbean.calamariui.common.ErrorLabel;
 import javafx.scene.paint.Color;
+import za.co.jumpingbean.calamariui.Main;
 
 /**
  * @author mark
@@ -58,7 +59,8 @@ public def reportUserDetail="userDetail";
 public def reportDomainDetail="domainDetail";
 public def reportContentTypeDetail="contentTypeDetail";
 public def reportAll="details";
-
+public var dateControl:DateCriteriaControls;
+public-read def standardColumnsToHide:String[]=["elapsed","parameters","serverInfo","peerStatusPeerHost","method","codeStatus","hits","accessDate","bytesKB"];
 
 
 public class TabularDisplay extends CustomNode,Poller{
@@ -68,7 +70,6 @@ public-read def logEntries = SquidLogRecordListWrapper{};//reference to untransf
 public var tableData:SquidLogRecord[]; //the data to dispaly - may or may not be transformed
 public var startDate:GregorianCalendar;// holds data start date
 public var endDate:GregorianCalendar;// holds data end date
-var sortOrderFlag:Boolean = true; // flag to change sort order of columns (asc/desc)
 public var showingAggregate:Boolean=false;
 var vbox:VBox; //reference to vbox in header for insertion of data loading
 def dataLoadingIndicator=DataLoadingIndicator{};
@@ -82,7 +83,7 @@ var controls:HBox;//rference to controls hbox to get height.
 var errorLabel:Label;
 
 //this is the list of columns to hide by default
-public var hideColumns:String[]=["elapsed","parameters","serverInfo","peerStatusPeerHost","method","codeStatus","hits","accessDate","bytesKB"] on replace{
+public var hideColumns:String[]=TabularDisplay.standardColumnsToHide on replace{
             table.tableModel=getModel();
 };
 
@@ -90,7 +91,9 @@ public var hideColumns:String[]=["elapsed","parameters","serverInfo","peerStatus
 //Determines when we can stop the poller timeline object.
 var pollerDone=false on replace oldvalue{
             if (pollerDone==true){
-                tabularPoller.stop();
+                Main.asyncTaksInProgress=false;//enable getData button
+                tabularPoller.stop();//stop the poller
+                this.hideColumns=TabularDisplay.standardColumnsToHide;
                 this.tableData=logEntries.list;
                 stopIndicator();
                 println("stoping poller...");
@@ -125,7 +128,7 @@ def tabularPoller = Timeline{
     ]
 }
 
-def table:XSwingTable = XSwingTable{
+public-read def table:XSwingTable = XSwingTable{
        width:bind width;
        height:bind height-controls.height-100//make sure not off scene
        tableModel: getModel();
@@ -202,7 +205,7 @@ public function removeDisplaySelector(displaySelector:DisplaySelector){
 override protected function create () : Node {
 
         var header:JTableHeader = table.getJTable().getTableHeader();
-        header.addMouseListener(columnSorter{ table:table});
+        header.addMouseListener(ColumnSortListener{display: this});
          display = VBox{
                 nodeHPos:HPos.LEFT
                 spacing:20
@@ -215,18 +218,18 @@ override protected function create () : Node {
                                 spacing:10
                                 nodeHPos:HPos.CENTER;
                                 content:[
-                                DateCriteriaControls{
+                                dateControl = DateCriteriaControls{
                                     startDate: bind startDate with inverse
                                     endDate:bind endDate with inverse
-                                    display:this
+                                    display:this;
                                 },
                                 ReportSelectorControl{
                                     tableDisplay:this
                                 }
                                 ShowHideColumnControl{
-                                    tableDisplay: this
+                                    tableDisplay:this
                                 },
-                                AggregateControl{
+                                AggregatorControl{
                                     tableDisplay:this
                                 },
                                 //errorLabel
@@ -269,11 +272,16 @@ override public function startPoller(){
                 tabularPoller.play();
 }
 
+
 public function startIndicator(text:String){
          reportTitle="{StringUtil.camelToTitleCase(reportType)} from {Utils.formatDatePrettyPrint(startDate)} to {Utils.formatDatePrettyPrint(endDate)} for parameter {reportParameter}";
          dataLoadingIndicator.text=text;
          dataLoadingIndicator.start();
-         insert dataLoadingIndicator after vbox.content[4];
+         //this check is in case a sort/aggregation is running and the user
+         //cancels it by selecting another sort/aggregation.
+         if (Sequences.indexOf(vbox.content,dataLoadingIndicator)==-1){
+            insert dataLoadingIndicator after vbox.content[4];
+         }
 }
 
 
@@ -284,68 +292,17 @@ public  function stopIndicator(){
 }
 
 //Handle sorting of columns
-class  columnSorter extends MouseAdapter{
+class  ColumnSortListener extends MouseAdapter{
 
-    var table:XSwingTable;
+    //var table:XSwingTable;
     var display:TabularDisplay;
 
     override public function mouseClicked(event:MouseEvent):Void {
+         //ignore sort if busy!
+         if (Main.asyncTaksInProgress) return;
+         Main.asyncTaksInProgress=true; //set the flag as we now have access
          display.startIndicator(DataLoadingIndicator.SORTING);
-         
-         def colModel:TableColumnModel = table.getJTable().getColumnModel();
-         def columnModelIndex = colModel.getColumnIndexAtX(event.getX());
-         def column:TableColumn = colModel.getColumn(columnModelIndex);
-         var sortColumn = Utils.toClassCamelCase(column.getHeaderValue().toString());
-         if (sortColumn=="kiloBytes") {
-                 sortColumn="bytesKB";
-         }//not lekker
-         else if (sortColumn=="user") sortColumn="rfc931";//also not lekker
-         var data = Sequences.sort(tableData,Comparator{
-             override public function equals (item: Object) : Boolean {
-                    if (item==null) return false;
-                    if (item==this) return true;
-                    return false;
-             }
-             //Use refelction to retrieve value. 
-             override public function compare (item1 : Object, item2 : Object) : Integer {
-                def ctx:FXLocal.Context = FXLocal.getContext();
-                def cls:FXLocal.ClassType = ctx.findClass("za.co.jumpingbean.calamariui.model.SquidLogRecord");
-                def fxItem1 = new FXLocal.ObjectValue(item1,cls);
-                def fxItem2 = new FXLocal.ObjectValue(item2,cls);
-                def variable = cls.getVariable(Utils.toClassCamelCase(sortColumn));
-                def fxVal1:FXValue = variable.getValue(fxItem1);
-                def fxVal2:FXValue = variable.getValue(fxItem2);
-                 if (sortColumn=="hits" or sortColumn=="bytes" or sortColumn=="elapsed"){
-                            def tmpItem1 = Integer.parseInt(fxVal1.getValueString());
-                            def tmpItem2 = Integer.parseInt(fxVal2.getValueString());
-                            return tmpItem1.compareTo(tmpItem2);
-                 } else if (sortColumn=="bytesKB"){
-                            def tmpItem1 = new BigDecimal(fxVal1.getValueString());
-                            def tmpItem2 = new BigDecimal(fxVal2.getValueString());
-                            return tmpItem1.compareTo(tmpItem2);
-                 }
-                 else if (sortColumn=="accessDate"){
-                            println(fxVal1.getValueString());
-                            def tmpItem1 = Utils.toDate(fxVal1.getValueString());
-                            def tmpItem2 = Utils.toDate(fxVal2.getValueString());
-                            return tmpItem1.compareTo(tmpItem2);
-                 }else{
-                            def tmpItem1 = fxVal1.getValueString();
-                            def tmpItem2 = fxVal2.getValueString();
-                            return tmpItem1.compareTo(tmpItem2);
-                 }
-              }
-        }) as SquidLogRecord[];
-        //Bit of a hack to change sort order. User will need to click on column to twice potentially to get required order
-        //asc or desc. Avoids having to track previous order for each column.
-        if (sortOrderFlag){
-            sortOrderFlag=false;
-            tableData = reverse data;
-        }else{
-            sortOrderFlag=true;
-            tableData = data;
-        }
-        display.stopIndicator();
+         ColumnSorterTask{columnSorter:ColumnSorter{tableDisplay:display X:event.getX()}}.start();
     }
 }
 

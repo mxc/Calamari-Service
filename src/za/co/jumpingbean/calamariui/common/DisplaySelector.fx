@@ -46,12 +46,12 @@ public class DisplaySelector extends CustomNode {
                             dropDownHeight:60
                             onIndexChange:function(index:Integer){
                               if (index==0) {
-                                  main.showChartDisplay();
+                                  FX.deferAction(function():Void { main.showChartDisplay()});
                               }
                               else if (index==1) {
-                                  main.showTabularDisplay(TabularDisplay.reportAll,null);
+                                  FX.deferAction(function():Void{ main.showTabularDisplay(TabularDisplay.reportAll,null)});
                               } else{
-                                main.showAdminDisplay();
+                                FX.deferAction(function():Void { main.showAdminDisplay()});
                               }
                         }
                     }

@@ -36,11 +36,11 @@ public class ShowHideColumnControl extends CustomNode{
             var checkbox:CheckBox = CheckBox{
                 text:variable.getName();
                 onMouseClicked:function(event:MouseEvent){
-                   //If a selection is made make sure the mode has the right table data
-                   //It could be coming from an aggregate view.
-                   if (tableDisplay.showingAggregate) {
-                           tableDisplay.tableData=tableDisplay.logEntries.list;
-                           tableDisplay.showingAggregate=false;
+                     //if we are in aggregate mode then ignore!
+                     if (tableDisplay.showingAggregate) {
+                           return;
+                           //tableDisplay.tableData=tableDisplay.logEntries.list;
+                           //tableDisplay.showingAggregate=false;
                     }
                    if (checkbox.selected==true){
                        if (Sequences.indexOf(tableDisplay.hideColumns,checkbox.text)!=-1){

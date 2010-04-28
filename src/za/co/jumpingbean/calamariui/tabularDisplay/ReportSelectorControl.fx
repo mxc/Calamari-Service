@@ -21,6 +21,7 @@ import javafx.geometry.VPos;
 import javafx.geometry.HPos;
 import za.co.jumpingbean.calamariui.common.ExpandImage;
 import javafx.util.Sequences;
+import za.co.jumpingbean.calamariui.Main;
 
 /**
  * @author mark
@@ -65,6 +66,7 @@ public class ReportSelectorControl extends CustomNode {
 
         def btnGetData= Button{
             text:"Get Data"
+            disable:bind Main.asyncTaksInProgress;
             onMouseClicked:function(event:MouseEvent){
                     if (picker.selectedIndex==0) tableDisplay.reportType=tableDisplay.reportUserDetail;
                     if (picker.selectedIndex==1) tableDisplay.reportType=tableDisplay.reportDomainDetail;

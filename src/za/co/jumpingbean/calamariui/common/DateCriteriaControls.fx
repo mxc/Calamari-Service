@@ -24,6 +24,7 @@ import org.jfxtras.scene.layout.XSpacer;
 import org.jfxtras.scene.layout.Priority;
 import javafx.util.Sequences;
 import java.util.GregorianCalendar;
+import za.co.jumpingbean.calamariui.Main;
 
 
 /**
@@ -35,16 +36,15 @@ public class DateCriteriaControls extends CustomNode {
     public var startDate:GregorianCalendar on replace {println ("replaced in datecriteriacontrol ....")};
     public var endDate:GregorianCalendar;
     public var display:Poller;
-    var startPicker:DatePicker;
-    var endPicker:DatePicker;
 
-    override protected function create () : Node {
+override protected function create () : Node {
 
 
         var controls = VBox {
-             hpos: HPos.LEFT
-             spacing:10
-             //layoutInfo: LayoutInfo{}
+            hpos: HPos.LEFT
+            spacing:10
+            var btnGet:Button;
+
             nodeHPos:HPos.CENTER
             content:[
                       HBox{
@@ -64,12 +64,15 @@ public class DateCriteriaControls extends CustomNode {
                                 //nodeVPos:VPos.CENTER
                                // width:bind main.chartData.width
                                 content:[
-                                    Button{text:"Get Data"
+                                   btnGet= Button{
+                                        text:"Get Data"
+                                        disable:bind Main.asyncTaksInProgress;
                                         onMouseClicked:function(event:MouseEvent){
                                             //endDate = endPicker.date;
                                             //startDate = startPicker.date;
                                             //println("dates udated - {startDate.getTime().toGMTString()} {endDate.getTime().toGMTString()}");
                                             println("starting poller....");
+                                            Main.asyncTaksInProgress=true;
                                             display.startPoller();
                                             }
                                     }

@@ -10,7 +10,6 @@ import java.util.GregorianCalendar;
 import javafx.scene.chart.PieChart;
 import za.co.jumpingbean.calamariui.Main;
 import za.co.jumpingbean.calamariui.tabularDisplay.TabularDisplay;
-import org.jfxtras.util.XMap;
 import javafx.io.http.HttpRequest;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,7 +27,7 @@ public class DataService {
 
        var main:Main;
 
-       def baseUrl="http://192.168.1.229:9998";
+       def baseUrl="http://192.168.1.216:9998";
 
         public function getTopSitesByHits(startDate:GregorianCalendar,endDate:GregorianCalendar,count:Integer,data:ChartDataListWrapper){
              getChartData(startDate,endDate,count,data,"dataservice/topsitesbyhits","hits");
@@ -108,6 +107,44 @@ public class DataService {
         }
 
 
+        function getStringResult(url:String,result:StringResultWrapper){
+            def request:HttpRequest=HttpRequest{
+                location: "{baseUrl}/{url}"
+                method:HttpRequest.GET
+                onException:function(ex:Exception){
+                    result.result=ex.getMessage();
+                    result.errorMessage=ex.getMessage();
+                }
+                onInput:function(is:InputStream){
+                    result.result=readInputBuffer(is);
+                    println("--{result.result}");
+               }
+                onDone: function(){
+                   println("done...");
+                   if (request.error!=null){
+                       println("error---{result.result}");
+                       result.error=true;
+                       result.done=true;
+                       //result.result=readInputBuffer(request.error);
+                    }else{
+                        //result.result="success";
+                        result.done=true;
+                    }
+                    println("result---{result.result}");
+                }
+            }
+            request.start();
+        }
+
+        public function getImportStatus(result:StringResultWrapper){
+           getStringResult("admin/importlogfilesstatus",result);
+        }
+        
+        public function startImport(result:StringResultWrapper){
+           getStringResult("admin/importlogfiles",result);
+        }
+
+
         function getSquidLogDetailData(startDate:GregorianCalendar,endDate:GregorianCalendar,url:String,param:String,data:SquidLogRecordListWrapper){
             def begin = Utils.formatDate(startDate);
             def end = Utils.formatDate(endDate);
@@ -123,6 +160,7 @@ public class DataService {
                        data.errorMessage=ex.getMessage();
                 }
                 onDone: function(){
+                   println("done");
                    if ( data.error){
                         data.done=true;
                    }else if (sizeof parser.list>0){

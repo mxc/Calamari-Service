@@ -16,6 +16,8 @@ import za.co.jumpingbean.calamariui.chartDisplay.ChartDisplay;
 import za.co.jumpingbean.calamariui.tabularDisplay.TabularDisplay;
 import za.co.jumpingbean.calamariui.adminDisplay.AdminDisplay;
 import za.co.jumpingbean.calamariui.common.DisplaySelector;
+import javafx.async.RunnableFuture;
+import javafx.async.JavaTaskBase;
 
 /**
  * @author mark
@@ -25,6 +27,8 @@ import za.co.jumpingbean.calamariui.common.DisplaySelector;
 var startDate:GregorianCalendar= new GregorianCalendar(2010,2,31);
 var endDate:GregorianCalendar= new GregorianCalendar(2010,2,31);
 var scene:Scene;
+
+static public var asyncTaksInProgress:Boolean;
 
 //Our eye candy gradient fill
 def gradientFill:LinearGradient =  LinearGradient {
@@ -69,15 +73,22 @@ def adminControl = AdminDisplay{
 
 //Use this function to hide/show panels
 public function showTabularDisplay(reportType:String,parameter:String){
-    tabularControl.reportType=reportType;
-    tabularControl.reportParameter=parameter;
+    var runFlag:Boolean=false;
+    if (tabularControl.reportType!=reportType) {
+            tabularControl.reportType=reportType;
+            runFlag=true;
+    }
+    if (tabularControl.reportParameter!=parameter){
+           tabularControl.reportParameter=parameter;
+           runFlag=true;
+    }
     chartControl.removeDisplaySelector(displaySelector);
     adminControl.removeDisplaySelector(displaySelector);
     tabularControl.insertDisplaySelector(displaySelector);
     delete chartControl from scene.content;
     delete adminControl from scene.content;
     insert tabularControl into scene.content;
-    tabularControl.startPoller();
+    if (runFlag) tabularControl.startPoller();
 }
 
 //Use this function to hide/show panels

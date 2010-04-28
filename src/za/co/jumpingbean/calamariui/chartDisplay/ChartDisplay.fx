@@ -31,6 +31,7 @@ import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import za.co.jumpingbean.calamariui.common.ErrorLabel;
+import za.co.jumpingbean.calamariui.Main;
 
 /**
  * @author mark
@@ -62,11 +63,13 @@ var pie1:PieChart3D;
 var pie2:PieChart3D;
 var pie3:PieChart3D;
 var pie4:PieChart3D;
+var dateControl:DateCriteriaControls;
 
 
 //Determines when we can stop the poller timeline object.
 var pollerDone=false on replace oldvalue{
             if (pollerDone==true){
+                Main.asyncTaksInProgress=false;//enable getData button
                 chartPoller.stop();
                 dataLoadingIndicator.stop();
                 delete dataLoadingIndicator from displaySelectorPlacement.content;
@@ -153,7 +156,7 @@ public function removeDisplaySelector(displaySelector:DisplaySelector){
                                     nodeHPos:HPos.CENTER
                                     spacing:10
                                     content:[
-                                        DateCriteriaControls{
+                                       dateControl= DateCriteriaControls{
                                             startDate: bind startDate with inverse
                                             endDate: bind endDate with inverse
                                             display:this
