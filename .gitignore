@@ -1,6 +1,8 @@
 #exclude the database
 Calamari/
-#exclude target
+#exclude target classes test-classes
 target/
 #sundry files
 derby.log
+nbactions.xml
+profiles.xml
