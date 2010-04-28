@@ -18,19 +18,13 @@ import java.util.Map;
 public class Main {
 
         public static void main(String[] args) throws IOException {
-
-            final String baseUri = "http://192.168.1.229:9998/";
-            final Map<String, String> initParams =
-   	                       new HashMap<String, String>();
-
-            initParams.put("com.sun.jersey.config.property.packages",
-                   "za.co.jumpingbean.calamari.services");
-
+          final String baseUri = "http://192.168.1.229:9998/";
+          final Map<String, String> initParams = new HashMap<String, String>();
+          initParams.put("com.sun.jersey.config.property.packages","za.co.jumpingbean.calamari.services");
           System.out.println("Starting grizzly...");
           SelectorThread threadSelector = GrizzlyWebContainerFactory.create(baseUri, initParams);
           threadSelector.setCompression("on");
-          threadSelector.setCompressableMimeTypes("application/fastinfoset");
-          threadSelector.setCompressionMinSize(5);
+          threadSelector.setCompressionMinSize(0);
           threadSelector.setCompressableMimeTypes("text/xml");
           System.out.println(String.format(
             "Jersey app started with WADL available at %sapplication.wadl\n" +

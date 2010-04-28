@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,17 +24,24 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import za.co.jumpingbean.calamari.dal.DBException;
+import za.co.jumpingbean.calamari.dal.ImportFileResultHandler;
 import za.co.jumpingbean.calamari.dal.MetaDataHandler;
 import za.co.jumpingbean.calamari.dal.ResultSetHandler;
 import za.co.jumpingbean.calamari.dal.JDBCHelper;
+import za.co.jumpingbean.calamari.dal.RecordDetailResultSetHandler;
+import za.co.jumpingbean.calamari.model.ImportFile;
 import za.co.jumpingbean.calamari.support.Config;
+import za.co.jumpingbean.calamari.support.EndDateTimeParam;
 import za.co.jumpingbean.calamari.support.LogFileImporter;
+import za.co.jumpingbean.calamari.support.StartDateTimeParam;
 
 
 /*
@@ -197,7 +205,6 @@ public class AdminService {
         }
 
 
-
         private String importLogFiles(final LogFileImporter importer, String configKey) throws ServiceException{
             try {
                 String folder = helper.getConfig(configKey);
@@ -272,6 +279,22 @@ public class AdminService {
             }
             return status;
         }
+
+        @GET
+        @Path("/importhistory/{startDate: [0-9]{8}}/{endDate: [0-9]{8}}/")
+        @Produces(MediaType.TEXT_XML)
+        public List<ImportFile> getImportHistory(@PathParam("startDate")StartDateTimeParam startDateParam,@PathParam("endDate")EndDateTimeParam endDateParam) throws ServiceException{
+           try{
+                DateTime startDate = startDateParam.getDateTime();
+                DateTime endDate = endDateParam.getDateTime();
+                String sql = String.format("Select fileName,importDate,checksum from importFile where importDate between '%s' and '%s' order by  importDate desc", new Timestamp(startDate.getMillis()).toString(), new Timestamp(endDate.getMillis()).toString());
+                return helper.getResultSet(sql, new ImportFileResultHandler());
+            } catch (DBException ex) {
+                logger.error("there was an error getting import file history "+ex.getMessage());
+                throw new ServiceException("there was an error getting import file history "+ex.getMessage(),ex);
+            }
+        }
+
 
 //        private void importLog(File logFile) throws ServiceException {
 //        String sql="";

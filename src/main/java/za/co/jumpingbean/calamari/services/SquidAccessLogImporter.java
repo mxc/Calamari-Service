@@ -35,9 +35,16 @@ public class SquidAccessLogImporter extends LogFileImporter{
     public void importLog(File logFile) throws ServiceException {
         String sql="";
         try {
+            //check if file has already been imported!
+            sql = String.format("Select id from importFile where filename like '%s'",logFile.getCanonicalFile());
+            if (helper.getSingleResult(sql)!=null) {
+                logger.warn(logFile.getCanonicalPath() +" has already been imported!");
+                return;
+            }
             BufferedReader reader;
             CheckedInputStream check;
             logger.debug("importing log file " +logFile.getName());
+            //Unzip file if needs be. and setup checksum for file.
             if (logFile.getName().indexOf("gz")!=-1){
                 logger.info("decompressing log file" + logFile.getName());
                 check = new CheckedInputStream(new FileInputStream(decompressGZ(logFile)),new CRC32());
