@@ -16,7 +16,6 @@ import java.util.Map;
  * @author mark
  */
 public class Main {
-
         public static void main(String[] args) throws IOException {
           final String baseUri = "http://192.168.1.229:9998/";
           final Map<String, String> initParams = new HashMap<String, String>();

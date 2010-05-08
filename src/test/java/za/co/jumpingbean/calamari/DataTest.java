@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import za.co.jumpingbean.calamari.model.ChartDataPoint;
 import za.co.jumpingbean.calamari.model.SquidLogRecord;
+import za.co.jumpingbean.calamari.model.TimeSeriesDataPoint;
 import za.co.jumpingbean.calamari.services.DataService;
 import za.co.jumpingbean.calamari.services.ServiceException;
 
@@ -149,4 +150,34 @@ public class DataTest extends AbstractUnitTest{
 //        DataService dao = new DataService();
 //        //dao.shutdownDB();
 //    }
+
+    @Test
+    public void getDomainHitsByHour() throws ServiceException{
+        logger.debug("------------------ Get Domain Hits By Hour ---------------");
+        WebResource resource = client.resource("http://127.0.0.1:9998/dataservice/domainhitsbyhour/20100301/20100331/www.google.com");
+        GenericType<Collection<TimeSeriesDataPoint>> genericType = new GenericType<Collection<TimeSeriesDataPoint>>() {};
+        Collection<TimeSeriesDataPoint> response = resource.accept(MediaType.TEXT_XML).get(genericType);
+        if (response==null || response.size()==0){
+            Assert.assertFalse("user details list is empty or null", true);
+        }
+        for (TimeSeriesDataPoint tmpData: response){
+            logger.debug(tmpData.getName()+" = " + tmpData.getName()  +","+ tmpData.getDate()+ ","+ tmpData.getValue());
+        }
+    }
+
+    @Test
+    public void getUserHitsByHour() throws ServiceException{
+        logger.debug("------------------ Get User Hits By Hour ---------------");
+        WebResource resource = client.resource("http://127.0.0.1:9998/dataservice/userhitsbyhour/20100301/20100331/joseph");
+        GenericType<Collection<TimeSeriesDataPoint>> genericType = new GenericType<Collection<TimeSeriesDataPoint>>() {};
+        Collection<TimeSeriesDataPoint> response = resource.accept(MediaType.TEXT_XML).get(genericType);
+        if (response==null || response.size()==0){
+            Assert.assertFalse("user details list is empty or null", true);
+        }
+        for (TimeSeriesDataPoint tmpData: response){
+            logger.debug(tmpData.getName()+" = " + tmpData.getName()  +","+ tmpData.getDate()+ ","+ tmpData.getValue());
+        }
+    }
+
+
 }

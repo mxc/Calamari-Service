@@ -41,7 +41,7 @@ import za.co.jumpingbean.calamari.model.ImportFile;
 import za.co.jumpingbean.calamari.support.Config;
 import za.co.jumpingbean.calamari.support.EndDateTimeParam;
 import za.co.jumpingbean.calamari.support.LogFileImporter;
-import za.co.jumpingbean.calamari.support.StartDateTimeParam;
+import za.co.jumpingbean.calamari.support.DateTimeParam;
 
 
 /*
@@ -283,7 +283,7 @@ public class AdminService {
         @GET
         @Path("/importhistory/{startDate: [0-9]{8}}/{endDate: [0-9]{8}}/")
         @Produces(MediaType.TEXT_XML)
-        public List<ImportFile> getImportHistory(@PathParam("startDate")StartDateTimeParam startDateParam,@PathParam("endDate")EndDateTimeParam endDateParam) throws ServiceException{
+        public List<ImportFile> getImportHistory(@PathParam("startDate")DateTimeParam startDateParam,@PathParam("endDate")EndDateTimeParam endDateParam) throws ServiceException{
            try{
                 DateTime startDate = startDateParam.getDateTime();
                 DateTime endDate = endDateParam.getDateTime();
