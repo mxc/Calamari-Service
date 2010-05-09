@@ -20,10 +20,11 @@ import org.slf4j.LoggerFactory;
  * @author mark
  */
 public class JDBCHelper {
+    
         private static JDBCHelper helper;
         private final String driver = "org.apache.derby.jdbc.EmbeddedDriver";
         private final static Logger logger = LoggerFactory.getLogger(JDBCHelper.class);
-        public final static String dbName = "Calamari";
+        public final static String dbName = "/var/lib/database/Calamari";
 
         public void updateConfig(String configkey, String configvalue) throws DBException{
                     String sql= String.format("Select configvalue from config where configkey ='%s'", configkey);
@@ -178,7 +179,8 @@ public class JDBCHelper {
 
      public void shutdown() {
         try {
-            DriverManager.getConnection("jdbc:derby:Calamari;shutdown=true");
+            DriverManager.getConnection("jdbc:derby:"+JDBCHelper.dbName+";shutdown=true");
+
         } catch (SQLException ex) {
             logger.info("Db has been shutdown " + ex.getMessage());
         }

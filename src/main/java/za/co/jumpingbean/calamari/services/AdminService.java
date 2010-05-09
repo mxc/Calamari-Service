@@ -74,10 +74,10 @@ public class AdminService {
                 if(dropIfExists){
                     logger.info("drop database requested...");
                     helper.shutdown();
-                    File file = new File("Calamari");
+                    File file = new File("/var/lib/database/Calamari");
                     logger.info("file path is "+ file.getAbsolutePath());
                     if (file.exists()) {
-                        logger.warn("deleting dabtase as requested ...");
+                        logger.warn("deleting database as requested ...");
                         delete(file);
                         buf.append("old database deleted.");
                     }else{
@@ -88,17 +88,23 @@ public class AdminService {
                 helper.processMetaDataResultSet(new MetaDataHandler(){
                 @Override
                 protected ResultSet handleMetaData(final DatabaseMetaData metaData) throws DBException{
-                    try {
                         boolean initialised = false;
+                        try {
                         //See if the datbase has been initialised
-                        final ResultSet resultSet = metaData.getTables(JDBCHelper.dbName, null, "SQUIDLOG", null);
-                        while (resultSet.next() && !initialised) {
-                            logger.debug("iterating over metadata result set");
-                            final String column = resultSet.getString("TABLE_NAME");
-                            if (column != null && column.equalsIgnoreCase("squidlog")) {
-                                logger.debug("found matching table 'squidlog'");
-                                initialised = true;
-                            }
+                            final ResultSet resultSet = metaData.getTables(JDBCHelper.dbName, null, "SQUIDLOG", null);
+                            while (resultSet.next() && !initialised) {
+                                logger.debug("iterating over metadata result set");
+                                final String column = resultSet.getString("TABLE_NAME");
+                                if (column != null && column.equalsIgnoreCase("squidlog")) {
+                                    logger.debug("found matching table 'squidlog'");
+                                    initialised = true;
+                                }
+                        }
+                        } catch (SQLException ex) {
+                            logger.error("error retrieve tables metadata from derby db" + ex.getMessage());
+                            throw new DBException("error retrieve tables metadata from derby db",ex);
+                        }catch(Exception ex){
+                            //db does not exist!
                         }
                         //If not then create derby db
                         if (!initialised) {
@@ -123,16 +129,13 @@ public class AdminService {
                             helper.executeUpdate("create table importFile (id integer primary key generated always as identity,"
                                                 +"fileName varchar(255)," +
                                                 "importDate timestamp, checksum bigint)");
+                            helper.updateConfig(Config.LOGFOLDER.getName(),"/var/log/squid");//set default log file location
                             buf.append(" new database initialised.");
                         }else {
                             buf.append(" existing database found, taking no action.");
                         }
                         return null;
-                    } catch (SQLException ex) {
-                        logger.error("error retrieve tables metadata from derby db" + ex.getMessage());
-                        throw new DBException("error retrieve tables metadata from derby db",ex);
                     }
-                }
                 });
                 return buf.toString();
         }
@@ -204,7 +207,6 @@ public class AdminService {
             return importLogFiles(new SquidAccessLogImporter(),Config.LOGFOLDER.getName());
         }
 
-
         private String importLogFiles(final LogFileImporter importer, String configKey) throws ServiceException{
             try {
                 String folder = helper.getConfig(configKey);
@@ -221,6 +223,7 @@ public class AdminService {
                 }
                 File logFolder = new File(folder);
                 final File list[];
+                //try{
                 if (logFolder.isDirectory() && (list = logFolder.listFiles(new FileFilter(){
                 @Override
                 public boolean accept(File pathname) {
@@ -245,6 +248,7 @@ public class AdminService {
                                importer.importLog(file);
                             } catch (ServiceException ex) {
                                 logger.error("Could not import file "+ file.getAbsolutePath());
+                                AdminService.importStatus.setCurrentFile("File Not imported! Check file read permisions!");
                             }
                       }
                       synchronized(AdminService.importStatus){
@@ -262,6 +266,9 @@ public class AdminService {
             } catch (DBException ex) {
                 logger.error("database error getting log folder "+ex.getMessage());
                 throw new ServiceException("database error getting log folder "+ex.getMessage(),ex);
+            }catch (NullPointerException ex) {
+                logger.error("your web server does not have read permissions on log squid folder "+ex.getMessage());
+                throw new ServiceException("your web server does not have read permissions on squid log folder "+ex.getMessage(),ex);
             }
         }
 
@@ -295,68 +302,7 @@ public class AdminService {
             }
         }
 
-
-//        private void importLog(File logFile) throws ServiceException {
-//        String sql="";
-//        try {
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile)));
-//            String line;
-//            //Group 1 = Date/Server/Proc Info
-//            //Group 2 = Date in unix epocj time
-//            //Group 3 = Elapsed Time
-//            //Group 4 = Remote IP/Host
-//            //Group 5 = code/status
-//            //group 6 = Size in bytes
-//            //Group 7 = method
-//            //Group 8 = URL (domain)
-//            //Group 9 = URL (parameters)
-//            //Group 10 = rfc931 (User Id or -)
-//            //Group 11 = peerstatus/peerhost
-//            //Group 12 = type (application mime type)
-//            final Pattern regex = Pattern.compile("(.*\\[\\d*\\]:) (\\d{10}\\.\\d{3})\\s*(\\d*)\\s*([\\S]*)\\s*(\\S*/\\d{3})\\s*(\\d*)\\s*(\\w*)\\s*(https?://[\\S&&[^/]]*)(/[\\S]*)\\s*([\\w-]*)\\s*(\\S*)\\s*([\\S]*)");
-//            while ((line = reader.readLine())!=null){
-//                Matcher matcher = regex.matcher(line);
-//                if (matcher.matches()){
-//                    //StringBuffer buf = new StringBuffer();
-//                    //Convert from Unix time stamp in seconds with milliseconds as decimal to
-//                    //Milliseconds needed by Java Timestamp
-//                    Double dbl = Double.parseDouble(matcher.group(2))*1000;
-//                    Timestamp timestamp = new Timestamp((dbl.longValue()));
-//                    String serverInfo = truncateString(matcher.group(1),255);
-//                    String elapsed = matcher.group(3);
-//                    String remotehost = truncateString(matcher.group(4),255);
-//                    String codeStatus = truncateString(matcher.group(5),255);
-//                    String method = truncateString(matcher.group(7),255);
-//                    String domain = truncateString(matcher.group(8),355);
-//                    String user = truncateString(matcher.group(10),255);
-//                    String peerStatus = truncateString(matcher.group(11),255);
-//                    String contentType = truncateString(matcher.group(12),255);
-//                    String parameters = truncateString(matcher.group(9),32700);
-//                    sql = String.format("Insert into squidlog (serverInfo,accessDate,elapsed,remotehost,codeStatus,bytes,method,domain,parameters,rfc931,peerstatusPeerhost,contentType) values('%s','%s',%s,'%s','%s',%s,'%s','%s','%s','%s','%s','%s')"
-//                    ,serverInfo,timestamp.toString(),elapsed,remotehost,
-//                     codeStatus,matcher.group(6),method,
-//                     domain,parameters,user,
-//                     peerStatus,contentType);
-//                    helper.executeUpdate(sql);
-//                }
-//            }
-//            reader.close();
-//        } catch (DBException ex) {
-//            logger.error("error executing sql " + sql);
-//            throw new ServiceException("error executing sql " + sql,ex);
-//        } catch (FileNotFoundException ex) {
-//            logger.error(logFile.getAbsolutePath() + " file not found!");
-//            throw new ServiceException(logFile.getAbsolutePath() + " file not found!",ex);
-//        } catch (IOException ex) {
-//            logger.error("Error reading file" + ex.getMessage());
-//        }
-//
-//        }
-
-
-
 }
-
 
   class Status{
             private String currentFile;

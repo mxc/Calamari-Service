@@ -46,7 +46,7 @@ public class SquidAccessLogImporter extends LogFileImporter{
             logger.debug("importing log file " +logFile.getName());
             //Unzip file if needs be. and setup checksum for file.
             if (logFile.getName().indexOf("gz")!=-1){
-                logger.info("decompressing log file" + logFile.getName());
+                logger.info("decompressing log file " + logFile.getName());
                 check = new CheckedInputStream(new FileInputStream(decompressGZ(logFile)),new CRC32());
                 reader = new BufferedReader(new InputStreamReader(check));
             }else{

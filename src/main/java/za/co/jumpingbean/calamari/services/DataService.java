@@ -38,7 +38,7 @@ import za.co.jumpingbean.calamari.model.TimeSeriesDataPoint;
 @Produces({MediaType.TEXT_XML})
 public class DataService {
 
-    private final JDBCHelper helper = JDBCHelper.getJDBCHelper();
+    private final JDBCHelper helper = JDBCHelper.getJDBCHelper(); // handles all db queries
     private final Logger logger = LoggerFactory.getLogger(DataService.class);
 
 
@@ -119,7 +119,7 @@ public class DataService {
             DateTime startDate = startDateParam.getDateTime();
             DateTime endDate = endDateParam.getDateTime();
             if (user.equalsIgnoreCase("All")) user="%";
-            String sql = String.format("Select * from squidlog where accessDate between '%s' and '%s' and rfc931 like '%%s%' order by  accessDate desc", new Timestamp(startDate.getMillis()).toString(), new Timestamp(endDate.getMillis()).toString(), user);
+            String sql = String.format("Select * from squidlog where accessDate between '%s' and '%s' and rfc931 like '%s' order by  accessDate desc", new Timestamp(startDate.getMillis()).toString(), new Timestamp(endDate.getMillis()).toString(), user);
             return helper.getResultSet(sql, new RecordDetailResultSetHandler());
         } catch (DBException ex) {
             logger.error("there was an error getting top sites by request"+ex.getMessage());
@@ -199,6 +199,7 @@ public class DataService {
         return getTimeSeriesHitData(startDateParam,endDateParam,user,false,TimeSeriesType.USER);
     }
 
+    // Main function to get and process all time series hit data
     private List<TimeSeriesDataPoint> getTimeSeriesHitData(DateTimeParam startDateParam,EndDateTimeParam endDateParam,String parameter,Boolean byHour,TimeSeriesType type) throws ServiceException
     {
         try {
@@ -220,7 +221,7 @@ public class DataService {
     }
 
 
-    //TODO: Consolidate into 1 method
+    
     @GET
     @Path("/domainsizebyhour/{startDate: [0-9]{8}}/{endDate: [0-9]{8}}/{domain}")
     public List<TimeSeriesDataPoint> getDomainSizeByHour(@PathParam("startDate")DateTimeParam startDateParam,@PathParam("endDate")EndDateTimeParam endDateParam,@PathParam("domain")String domain) throws ServiceException{
@@ -228,7 +229,6 @@ public class DataService {
         return this.getTimeSeriesSizeData(startDateParam, endDateParam, domain, Boolean.TRUE,TimeSeriesType.DOMAIN);
     }
 
-    //TODO: Consolidate into 1 method
     @GET
     @Path("/domainsizebyday/{startDate: [0-9]{8}}/{endDate: [0-9]{8}}/{domain}")
     public List<TimeSeriesDataPoint> getDomainSizeByDay(@PathParam("startDate")DateTimeParam startDateParam,@PathParam("endDate")EndDateTimeParam endDateParam,@PathParam("domain")String domain) throws ServiceException{
@@ -250,7 +250,7 @@ public class DataService {
         return this.getTimeSeriesSizeData(startDateParam, endDateParam,user,false,TimeSeriesType.USER);
     }
 
-
+    // Main function to get and process all time series byte/Size data
     private List<TimeSeriesDataPoint> getTimeSeriesSizeData(DateTimeParam startDateParam,EndDateTimeParam endDateParam,String parameter,Boolean byHour,TimeSeriesType type) throws ServiceException{
          try {
             DateTime startDate = startDateParam.getDateTime();
@@ -278,9 +278,9 @@ public class DataService {
        Long start, end, step;
 
        if (byHour){
-          step=3600000L;
+          step=3600000L;//milliseconds in hour
        }else{
-          step =86400000L;
+          step =86400000L;//milliseconds in day
        }
        //Get start date to local time
        startDate = startDate.toDateTime(DateTimeZone.getDefault());
@@ -294,10 +294,8 @@ public class DataService {
        for (DateTime i =startDate; i.compareTo(endDate)<0;i=i.plus(step)){
        //DateTime date = new DateTime(i,DateTimeZone.getDefault());
        Timestamp tmpTimestamp = new Timestamp(i.getMillis());
-       logger.debug("timestamp ==" +tmpTimestamp.toLocaleString());
        Boolean exists=false;
        for (TimeSeriesDataPoint point : points){
-           //logger.debug("point ==" +point.getDate().toLocaleString() +"point value="+ point.getValue());
            if (point.getDate().compareTo(tmpTimestamp)==0){
                exists = true;
                break;
@@ -315,7 +313,6 @@ public class DataService {
 
             @Override
             public int compare(TimeSeriesDataPoint o1, TimeSeriesDataPoint o2) {
-                //logger.debug("o1="+o1.getDate().toGMTString()+" 02="+o2.getDate().toGMTString());
                 return o1.getDate().compareTo(o2.getDate());
             }
         });
